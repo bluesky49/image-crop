@@ -1,24 +1,44 @@
-import logo from './logo.svg';
+import { useState } from 'react';
+import { ThemeProvider } from '@material-ui/core/styles';
+import Crop from './components/Crop';
+import { Header, CropImageViewer, ObjectBar, ObjectList } from './components/styledComponent';
+import Toolbar from './components/panelbar';
+
 import './App.css';
+import Theme from './style/Theme';
+import AppContext from './helper/context';
 
 function App() {
+  const [src, setSrc] = useState([]);
+  const [cropEnable, setEnable] = useState(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppContext.Provider value={{src, cropEnable, setSrc, setEnable}}>
+      <ThemeProvider theme={Theme}>
+        <Header>
+          <span>REMO</span>
+        </Header>
+        <div className="body">
+
+          <Toolbar />
+          <div className="crop-wrapper">
+            <Crop />
+            <CropImageViewer>
+              {src.map((item, index) => (
+                <img src={item} key={index} alt="crop" />
+              ))}
+            </CropImageViewer>
+          </div>
+          <ObjectBar>
+            {src.map((item, index) => (
+              <div key={index}>
+                <ObjectList>{`Object${index}`}</ObjectList>
+              </div>
+            ))}
+          </ObjectBar>
+        </div>
+      </ThemeProvider>
+    </AppContext.Provider>
   );
 }
 
